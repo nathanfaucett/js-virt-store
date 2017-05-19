@@ -7,9 +7,9 @@ store bindings for virt
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
     virtDOM = require("@nathanfaucett/virt-dom"),
-
     createStore = require("@nathanfaucett/store"),
 
+    virt = require("@nathanfaucett/virt"),
     virtStore = require("@nathanfaucett/virt-store");
 
 
@@ -34,6 +34,13 @@ store.addMiddleware(function counterMiddleware(store, action, next) {
             });
             break;
         }
+        case "DEC": {
+            store.dispatch({
+                type: "DEC_DONE",
+                count: store.getState().counter.count - 1
+            });
+            break;
+        }
     }
 
     next(action);
@@ -42,6 +49,10 @@ store.addMiddleware(function counterMiddleware(store, action, next) {
 store.add(function counter(state, action) {
     switch (action.type) {
         case "INC_DONE":
+            return {
+                count: action.count
+            };
+        case "DEC_DONE":
             return {
                 count: action.count
             };
@@ -61,19 +72,34 @@ Counter.propTypes = {
     count: propTypes.number.isRequired
 };
 
-Counter.contextTypes = {
-    store: propTypes.object.isRequired
-};
-
 Counter.prototype.render = function() {
     return (
-        virt.createView("div", this.props.count)
+        virt.createView("div",
+            virt.createView("button", {
+                onClick: this.props.incCount
+            }, "+"),
+            virt.createView("button", {
+                onClick: this.props.decCount
+            }, "-"),
+            virt.createView("p", this.props.count)
+        )
     );
 };
 
 
 function mapDispatchToProps(dispatch) {
-    return {};
+    return {
+        incCount: function() {
+            dispatch({
+                type: "INC"
+            });
+        },
+        decCount: function() {
+            dispatch({
+                type: "DEC"
+            });
+        }
+    };
 }
 
 function mapStateToProps(state /*, ownProps */) {
@@ -94,12 +120,4 @@ virtDOM.render(
     }),
     document.getElementById("app")
 );
-
-
-(function onSetTimeout() {
-    store.dispatch({
-        type: "INC"
-    });
-    setTimeout(onSetTimeout, 100);
-}());
 ```

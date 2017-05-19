@@ -76,7 +76,7 @@
         }
     };
 
-    global["SuefPNos-BOub-45Cm-MEuF-WjKDjj9YrNLJV"] = function(asyncDependencies) {
+    global["zD3KNAly-ou5K-4PSF-JAsf-SiG7dWoHTyCiB"] = function(asyncDependencies) {
         var i = -1,
             il = asyncDependencies.length - 1,
             dependency, index;
@@ -14924,7 +14924,8 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
         Component.call(this, props, children, context);
 
         this._unsubscribe = null;
-        this._mappedProps = Connect_mapProps(context.store, props);
+        this._store = props.store || context.store;
+        this._mappedProps = Connect_mapProps(this._store, props);
         this._shouldComponentUpdate = false;
 
         this._onUpdate = function onUpdate(state, action) {
@@ -14942,18 +14943,19 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
     };
 
     ConnectPrototype.componentDidMount = function() {
-        this._unsubscribe = this.context.store.subscribe(this._onUpdate);
+        this._unsubscribe = this._store.subscribe(this._onUpdate);
     };
 
     ConnectPrototype.componentWillUnmount = function() {
         this._unsubscribe();
     };
 
-    ConnectPrototype.componentWillReceiveProps = function(nextProps, nextChildren /*, nextContext */ ) {
+    ConnectPrototype.componentWillReceiveProps = function(nextProps, nextChildren, nextContext) {
         this._shouldComponentUpdate = Connect_shouldComponentUpdate(
             this,
-            Connect_mapProps(this.context.store, nextProps),
-            nextChildren
+            Connect_mapProps(this._store, nextProps),
+            nextChildren,
+            nextContext
         );
     };
 
@@ -14967,10 +14969,11 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
         return virt.createView(WrappedComponent, this._mappedProps, this.children);
     };
 
-    function Connect_shouldComponentUpdate(_this, nextProps, nextChildren) {
+    function Connect_shouldComponentUpdate(_this, nextProps, nextChildren, nextContext) {
         var prevProps = _this._mappedProps;
 
         _this._mappedProps = nextProps;
+        _this._store = nextProps.store || nextContext.store;
 
         return (
             notEqual(prevProps, nextProps) ||
@@ -14980,7 +14983,7 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
 
     function Connect_onUpdate(_this /*, state, action */ ) {
         _this.componentWillReceiveProps(
-            Connect_mapProps(_this.context.store, _this.props),
+            Connect_mapProps(_this._store, _this.props),
             _this.children,
             _this.context
         );
@@ -14990,10 +14993,10 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
         }
     }
 
-    function Connect_mapProps(store) {
+    function Connect_mapProps(store, ownProps) {
         return extend({},
-            mapStateToProps(store.getState(), this.props),
-            mapDispatchToProps(store.dispatch, this.props)
+            mapDispatchToProps(store.dispatch, ownProps),
+            mapStateToProps(store.getState(), ownProps)
         );
     }
 
