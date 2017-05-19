@@ -76,7 +76,7 @@
         }
     };
 
-    global["zD3KNAly-ou5K-4PSF-JAsf-SiG7dWoHTyCiB"] = function(asyncDependencies) {
+    global["UHMT0qSU-aUcN-4rTi-d7KA-5YtJ3XCmOY4Z5"] = function(asyncDependencies) {
         var i = -1,
             il = asyncDependencies.length - 1,
             dependency, index;
@@ -802,7 +802,7 @@ exports.devToolsEnhancer = (
 
 },
 function(require, exports, module, undefined, global) {
-/*@=-@nathanfaucett/virt-store@0.0.1/src/index.js-=@*/
+/*@=-@nathanfaucett/virt-store@0.0.2/src/index.js-=@*/
 var virtStore = exports;
 
 
@@ -14857,7 +14857,7 @@ function symbolObservablePonyfill(root) {
 };
 },
 function(require, exports, module, undefined, global) {
-/*@=-@nathanfaucett/virt-store@0.0.1/src/Provider.js-=@*/
+/*@=-@nathanfaucett/virt-store@0.0.2/src/Provider.js-=@*/
 var virt = require(1),
     propTypes = require(2);
 
@@ -14901,7 +14901,7 @@ ProviderPrototype.render = function() {
 };
 },
 function(require, exports, module, undefined, global) {
-/*@=-@nathanfaucett/virt-store@0.0.1/src/connect.js-=@*/
+/*@=-@nathanfaucett/virt-store@0.0.2/src/connect.js-=@*/
 var virt = require(1),
     propTypes = require(2),
     extend = require(29),
@@ -14925,11 +14925,14 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
 
         this._unsubscribe = null;
         this._store = props.store || context.store;
-        this._mappedProps = Connect_mapProps(this._store, props);
+
+        this._mappedState = mapStateToProps(this._store.getState(), props);
+        this._mappedDispatch = mapDispatchToProps(this._store.dispatch, props);
+        this._mappedProps = extend({}, this._mappedState, this._mappedDispatch);
         this._shouldComponentUpdate = false;
 
-        this._onUpdate = function onUpdate(state, action) {
-            return Connect_onUpdate(_this, state, action);
+        this._onUpdate = function(state) {
+            return onUpdate(_this, state);
         };
     }
     Component.extend(Connect, "virt.store.Connect");
@@ -14951,9 +14954,9 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
     };
 
     ConnectPrototype.componentWillReceiveProps = function(nextProps, nextChildren, nextContext) {
-        this._shouldComponentUpdate = Connect_shouldComponentUpdate(
+        this._shouldComponentUpdate = shouldComponentUpdate(
             this,
-            Connect_mapProps(this._store, nextProps),
+            nextProps,
             nextChildren,
             nextContext
         );
@@ -14969,21 +14972,24 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
         return virt.createView(WrappedComponent, this._mappedProps, this.children);
     };
 
-    function Connect_shouldComponentUpdate(_this, nextProps, nextChildren, nextContext) {
-        var prevProps = _this._mappedProps;
+    function shouldComponentUpdate(_this, nextProps, nextChildren, nextContext) {
+        var prevMappedState = _this._mappedState,
+            prevChildren = _this.children;
 
-        _this._mappedProps = nextProps;
         _this._store = nextProps.store || nextContext.store;
+        _this._mappedState = mapStateToProps(_this._store.getState(), nextProps);
+        _this._mappedDispatch = mapDispatchToProps(_this._store.dispatch, nextProps);
+        _this._mappedProps = extend({}, _this._mappedState, _this._mappedDispatch);
 
         return (
-            notEqual(prevProps, nextProps) ||
-            notEqual(nextChildren, nextChildren)
+            notEqual(prevMappedState, _this._mappedState) ||
+            notEqual(prevChildren, nextChildren)
         );
     }
 
-    function Connect_onUpdate(_this /*, state, action */ ) {
+    function onUpdate(_this /*, state, action */ ) {
         _this.componentWillReceiveProps(
-            Connect_mapProps(_this._store, _this.props),
+            _this.props,
             _this.children,
             _this.context
         );
@@ -14993,19 +14999,12 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
         }
     }
 
-    function Connect_mapProps(store, ownProps) {
-        return extend({},
-            mapDispatchToProps(store.dispatch, ownProps),
-            mapStateToProps(store.getState(), ownProps)
-        );
-    }
-
 
     return Connect;
 }
 },
 function(require, exports, module, undefined, global) {
-/*@=-@nathanfaucett/virt-store@0.0.1/src/notEqual.js-=@*/
+/*@=-@nathanfaucett/virt-store@0.0.2/src/notEqual.js-=@*/
 var has = require(27),
     isPrimitive = require(20),
     isArrayLike = require(58),
@@ -15032,17 +15031,17 @@ function notEqualArray(a, b) {
         i, il;
 
     if (aLength !== b.length) {
-        return false;
+        return true;
     } else {
         i = -1;
         il = aLength - 1;
 
         while (i++ < il) {
             if (a[i] !== b[i]) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }
 
@@ -15052,16 +15051,16 @@ function notEqualObject(a, b) {
 
     for (key in a) {
         if (a[key] !== b[key]) {
-            return false;
+            return true;
         }
     }
 
     for (key in b) {
         if (!localHas(a, key)) {
-            return false;
+            return true;
         }
     }
 
-    return true;
+    return false;
 }
 }], {}, void(0), (new Function("return this;"))()));

@@ -24,17 +24,17 @@ function notEqualArray(a, b) {
         i, il;
 
     if (aLength !== b.length) {
-        return false;
+        return true;
     } else {
         i = -1;
         il = aLength - 1;
 
         while (i++ < il) {
             if (a[i] !== b[i]) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }
 
@@ -44,15 +44,15 @@ function notEqualObject(a, b) {
 
     for (key in a) {
         if (a[key] !== b[key]) {
-            return false;
+            return true;
         }
     }
 
     for (key in b) {
         if (!localHas(a, key)) {
-            return false;
+            return true;
         }
     }
 
-    return true;
+    return false;
 }
