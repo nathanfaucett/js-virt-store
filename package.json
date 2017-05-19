@@ -1,0 +1,44 @@
+{
+  "name": "@nathanfaucett/virt-store",
+  "version": "0.0.1",
+  "description": "store bindings for virt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nathanfaucett/js-virt-store.git"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "example": "comn -f ./example/src/index.js -o ./example/index.js",
+    "test": "npm run test-node",
+    "test-node": "node ./test | ./node_modules/.bin/tap-spec",
+    "test-node-raw": "node ./test",
+    "test-browser-local": "zuul --local 9999 --ui tape -- ./test"
+  },
+  "keywords": [
+    "virt-store",
+    "virt-store.js"
+  ],
+  "author": "Nathan Faucett",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "@nathanfaucett/comn": "^0.0.13",
+    "@nathanfaucett/store": "^0.0.3",
+    "@nathanfaucett/task": "^0.0.8",
+    "@nathanfaucett/virt-dom": "0.0.16",
+    "gulp-jsbeautifier": "^2.1.0",
+    "gulp-jshint": "^2.0.4",
+    "jshint": "^2.9.4",
+    "redux": "^3.6.0",
+    "redux-devtools-extension": "^2.13.2"
+  },
+  "dependencies": {
+    "@nathanfaucett/extend": "^0.0.2",
+    "@nathanfaucett/has": "^0.0.2",
+    "@nathanfaucett/is_array_like": "^0.0.2",
+    "@nathanfaucett/is_object": "^0.0.1",
+    "@nathanfaucett/is_primitive": "^0.0.2",
+    "@nathanfaucett/prop_types": "^0.0.2",
+    "@nathanfaucett/virt": "0.0.13"
+  }
+}
