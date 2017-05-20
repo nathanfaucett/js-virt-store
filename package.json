@@ -1,6 +1,6 @@
 {
   "name": "@nathanfaucett/virt-store",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "store bindings for virt",
   "repository": {
     "type": "git",
@@ -11,8 +11,7 @@
     "example": "comn -f ./example/src/index.js -o ./example/index.js",
     "test": "npm run test-node",
     "test-node": "node ./test | ./node_modules/.bin/tap-spec",
-    "test-node-raw": "node ./test",
-    "test-browser-local": "zuul --local 9999 --ui tape -- ./test"
+    "test-node-raw": "node ./test"
   },
   "keywords": [
     "virt-store",
@@ -34,11 +33,8 @@
   },
   "dependencies": {
     "@nathanfaucett/extend": "^0.0.2",
-    "@nathanfaucett/has": "^0.0.2",
-    "@nathanfaucett/is_array_like": "^0.0.2",
-    "@nathanfaucett/is_object": "^0.0.1",
-    "@nathanfaucett/is_primitive": "^0.0.2",
     "@nathanfaucett/prop_types": "^0.0.2",
+    "@nathanfaucett/shallow_equals": "^0.0.2",
     "@nathanfaucett/virt": "0.0.13"
   }
 }

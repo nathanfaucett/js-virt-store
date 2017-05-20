@@ -76,7 +76,7 @@
         }
     };
 
-    global["UHMT0qSU-aUcN-4rTi-d7KA-5YtJ3XCmOY4Z5"] = function(asyncDependencies) {
+    global["Jb4UsBBh-qWbZ-48Nt-4LIY-40eIY0V315YV2"] = function(asyncDependencies) {
         var i = -1,
             il = asyncDependencies.length - 1,
             dependency, index;
@@ -802,7 +802,7 @@ exports.devToolsEnhancer = (
 
 },
 function(require, exports, module, undefined, global) {
-/*@=-@nathanfaucett/virt-store@0.0.2/src/index.js-=@*/
+/*@=-@nathanfaucett/virt-store@0.0.3/src/index.js-=@*/
 var virtStore = exports;
 
 
@@ -14857,7 +14857,7 @@ function symbolObservablePonyfill(root) {
 };
 },
 function(require, exports, module, undefined, global) {
-/*@=-@nathanfaucett/virt-store@0.0.2/src/Provider.js-=@*/
+/*@=-@nathanfaucett/virt-store@0.0.3/src/Provider.js-=@*/
 var virt = require(1),
     propTypes = require(2);
 
@@ -14901,11 +14901,11 @@ ProviderPrototype.render = function() {
 };
 },
 function(require, exports, module, undefined, global) {
-/*@=-@nathanfaucett/virt-store@0.0.2/src/connect.js-=@*/
+/*@=-@nathanfaucett/virt-store@0.0.3/src/connect.js-=@*/
 var virt = require(1),
     propTypes = require(2),
     extend = require(29),
-    notEqual = require(247);
+    shallowEquals = require(247);
 
 
 var Component = virt.Component;
@@ -14981,9 +14981,8 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
         _this._mappedDispatch = mapDispatchToProps(_this._store.dispatch, nextProps);
         _this._mappedProps = extend({}, _this._mappedState, _this._mappedDispatch);
 
-        return (
-            notEqual(prevMappedState, _this._mappedState) ||
-            notEqual(prevChildren, nextChildren)
+        return (!shallowEquals(prevMappedState, _this._mappedState) ||
+            !shallowEquals(prevChildren, nextChildren)
         );
     }
 
@@ -15004,63 +15003,62 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
 }
 },
 function(require, exports, module, undefined, global) {
-/*@=-@nathanfaucett/virt-store@0.0.2/src/notEqual.js-=@*/
+/*@=-@nathanfaucett/shallow_equals@0.0.2/src/index.js-=@*/
 var has = require(27),
-    isPrimitive = require(20),
     isArrayLike = require(58),
     isObject = require(24);
 
 
-module.exports = notEqual;
+module.exports = shallowEquals;
 
 
-function notEqual(a, b) {
-    if (isPrimitive(a) && isPrimitive(b)) {
-        return a !== b;
+function shallowEquals(a, b) {
+    if (a === b) {
+        return true;
     } else if (isArrayLike(a) && isArrayLike(b)) {
-        return notEqualArray(a, b);
+        return shallowEqualsArray(a, b);
     } else if (isObject(a) && isObject(b)) {
-        return notEqualObject(a, b);
+        return shallowEqualsObject(a, b);
     } else {
-        return a !== b;
+        return false;
     }
 }
 
-function notEqualArray(a, b) {
+function shallowEqualsArray(a, b) {
     var aLength = a.length,
         i, il;
 
     if (aLength !== b.length) {
-        return true;
+        return false;
     } else {
         i = -1;
         il = aLength - 1;
 
         while (i++ < il) {
             if (a[i] !== b[i]) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }
 
-function notEqualObject(a, b) {
+function shallowEqualsObject(a, b) {
     var localHas = has,
         key;
 
     for (key in a) {
         if (a[key] !== b[key]) {
-            return true;
+            return false;
         }
     }
 
     for (key in b) {
         if (!localHas(a, key)) {
-            return true;
+            return false;
         }
     }
 
-    return false;
+    return true;
 }
 }], {}, void(0), (new Function("return this;"))()));

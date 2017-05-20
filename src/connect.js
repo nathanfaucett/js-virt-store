@@ -1,7 +1,7 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
     extend = require("@nathanfaucett/extend"),
-    notEqual = require("./notEqual");
+    shallowEquals = require("@nathanfaucett/shallow_equals");
 
 
 var Component = virt.Component;
@@ -77,9 +77,8 @@ function connect(mapStateToProps, mapDispatchToProps, WrappedComponent) {
         _this._mappedDispatch = mapDispatchToProps(_this._store.dispatch, nextProps);
         _this._mappedProps = extend({}, _this._mappedState, _this._mappedDispatch);
 
-        return (
-            notEqual(prevMappedState, _this._mappedState) ||
-            notEqual(prevChildren, nextChildren)
+        return (!shallowEquals(prevMappedState, _this._mappedState) ||
+            !shallowEquals(prevChildren, nextChildren)
         );
     }
 
